@@ -1,0 +1,33 @@
+# OS - macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# OS - Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# MATLAB autosave/backup
+*.asv
+*.autosave
+
+# MATLAB compiled/binary artifacts
+*.mex*
+*.p
+*.obj
+*.o
+*.a
+*.so
+*.dll
+*.lib
+
+# Simulink/Code Generation
+slprj/
+sccprj/
+_MACOSX/
+.slxc
+.slprj
+.rpt
+.matlab

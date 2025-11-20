@@ -1,0 +1,20 @@
+{
+  "Cell_Type": "Skelgrid2_Gen1_Kaifa4000",
+  "Cell_ResESR10ms_Ohm": 0.00024,
+  "Cell_ResESR1s_Ohm": 0.0003,
+  "Cell_CapRated_F": 4150,
+  "Cell_VoltRated_V": 3,
+  "Module_NumCellSeries": 54,
+  "Module_RatedVoltage_V": 162,
+  "Module_Name": "Skelgrid 2.0",
+  "Cell_HeatCapa_JpK": 648.14814814814815,
+  "Cell_MaxRatedTemp_degC": 65,
+  "Cell_RatedLifetime_h": 1500,
+  "Cell_LowerSOCLimit_pc": 0,
+  "Cell_RthToCooling_KpW_naturalCooling": 72.9,
+  "Cell_RthToCooling_KpW_forcedAirCooling": 9.1800000000000015,
+  "Cell_RthToCooling_KpW_liquidCooling": 0.91800000000000015,
+  "Cell_RthToEnvironment_KpW_naturalCooling": 72.9,
+  "Cell_RthToEnvironment_KpW_forcedAirCooling": 9.1800000000000015,
+  "Cell_RthToEnvironment_KpW_liquidCooling": 0.91800000000000015
+}

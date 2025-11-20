@@ -1,0 +1,20 @@
+{
+  "Cell_Type": "Gen1_Cell_SCX5000",
+  "Cell_ResESR10ms_Ohm": 0.00012,
+  "Cell_ResESR1s_Ohm": 0.0002,
+  "Cell_CapRated_F": 5000,
+  "Cell_VoltRated_V": 3,
+  "Module_NumCellSeries": 1,
+  "Module_RatedVoltage_V": 3,
+  "Module_Name": "Single Cell",
+  "Cell_HeatCapa_JpK": 648.14814814814815,
+  "Cell_MaxRatedTemp_degC": 65,
+  "Cell_RatedLifetime_h": 1500,
+  "Cell_LowerSOCLimit_pc": 0,
+  "Cell_RthToCooling_KpW_naturalCooling": 72.9,
+  "Cell_RthToCooling_KpW_forcedAirCooling": 9.1800000000000015,
+  "Cell_RthToCooling_KpW_liquidCooling": 0.91800000000000015,
+  "Cell_RthToEnvironment_KpW_naturalCooling": 72.9,
+  "Cell_RthToEnvironment_KpW_forcedAirCooling": 9.1800000000000015,
+  "Cell_RthToEnvironment_KpW_liquidCooling": 2
+}

@@ -1,0 +1,20 @@
+{
+  "Cell_Type": "GERE_Blinky_GEN1",
+  "Cell_ResESR10ms_Ohm": 0.00014,
+  "Cell_ResESR1s_Ohm": 0.00018,
+  "Cell_CapRated_F": 3200,
+  "Cell_VoltRated_V": 2.85,
+  "Module_NumCellSeries": 6,
+  "Module_RatedVoltage_V": 51,
+  "Module_Name": "GERE Blinky",
+  "Cell_HeatCapa_JpK": 648.14814814814815,
+  "Cell_MaxRatedTemp_degC": 65,
+  "Cell_RatedLifetime_h": 1500,
+  "Cell_LowerSOCLimit_pc": 0,
+  "Cell_RthToCooling_KpW_naturalCooling": 72.9,
+  "Cell_RthToCooling_KpW_forcedAirCooling": 72.9,
+  "Cell_RthToCooling_KpW_liquidCooling": 7.2900000000000009,
+  "Cell_RthToEnvironment_KpW_naturalCooling": 72.9,
+  "Cell_RthToEnvironment_KpW_forcedAirCooling": 72.9,
+  "Cell_RthToEnvironment_KpW_liquidCooling": 7.2900000000000009
+}

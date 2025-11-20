@@ -1,0 +1,32 @@
+{
+  "Mediterranean": {
+    "description": "Sunny coastal climate (e.g., Southern Spain)",
+    "monthlyIrradiance_Wm2": [350, 420, 520, 620, 720, 820, 860, 810, 680, 550, 420, 360],
+    "sunriseHours": [8.0, 7.5, 7.0, 6.5, 6.0, 5.5, 5.5, 6.0, 6.5, 7.0, 7.5, 8.0],
+    "sunsetHours": [18.0, 18.5, 19.5, 20.5, 21.0, 21.5, 21.0, 20.5, 19.5, 18.5, 18.0, 17.5],
+    "panelArea_m2": 1.74,
+    "absorptivity": 0.70,
+    "heatCapacity_JpK": 45000,
+    "convection_WpK": 15
+  },
+  "Temperate": {
+    "description": "Mild climate with moderate solar exposure",
+    "monthlyIrradiance_Wm2": [200, 250, 320, 400, 480, 520, 540, 500, 420, 340, 250, 200],
+    "sunriseHours": [8.5, 8.0, 7.0, 6.0, 5.5, 5.0, 5.0, 5.5, 6.5, 7.0, 8.0, 8.5],
+    "sunsetHours": [16.5, 17.5, 19.0, 20.5, 21.5, 22.0, 21.5, 20.5, 19.0, 17.5, 16.5, 16.0],
+    "panelArea_m2": 1.74,
+    "absorptivity": 0.65,
+    "heatCapacity_JpK": 40000,
+    "convection_WpK": 18
+  },
+  "Desert": {
+    "description": "High solar load desert scenario",
+    "monthlyIrradiance_Wm2": [450, 520, 620, 750, 850, 920, 940, 910, 820, 700, 560, 470],
+    "sunriseHours": [7.5, 7.0, 6.5, 6.0, 5.5, 5.0, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5],
+    "sunsetHours": [18.5, 19.0, 20.0, 21.0, 21.5, 22.0, 22.0, 21.0, 20.0, 19.0, 18.5, 18.0],
+    "panelArea_m2": 1.74,
+    "absorptivity": 0.80,
+    "heatCapacity_JpK": 50000,
+    "convection_WpK": 12
+  }
+}
