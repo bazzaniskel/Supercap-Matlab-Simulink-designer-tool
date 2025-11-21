@@ -44,11 +44,7 @@ function run_mode(caseConfig)
 
     lifetime.save_summary(results_folder, caseConfig, search_result);
 
-    if isfield(caseConfig, 'performance') && isfield(caseConfig.performance, 'efficiency') ...
-            && caseConfig.performance.efficiency.enabled
-        fprintf('Running efficiency vs SOH analysis...\n');
-        performance.efficiency_curve_analysis(search_result.caseConfig, results_folder);
-    end
+    performance.run_analyses(search_result.caseConfig, results_folder);
 
     fprintf('\nResults saved to: %s\n', results_folder);
 end

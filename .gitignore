@@ -31,3 +31,7 @@ _MACOSX/
 .slprj
 .rpt
 .matlab
+
+# Results
+results/
+result/

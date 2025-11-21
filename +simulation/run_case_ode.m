@@ -8,7 +8,7 @@ function [Results, elapsed_time] = run_case_ode(caseConfig)
     n_pts = numel(time_grid);
 
     V_main = zeros(n_pts, 1);
-    V_fast = zeros(n_pts, 1);
+    V_fast = zeros(n_pts, 1); % terminal-side capacitor voltage (fast branch)
     Vbus = zeros(n_pts, 1);
     Iload = zeros(n_pts, 1);
     Pcell = zeros(n_pts, 1);
@@ -16,18 +16,19 @@ function [Results, elapsed_time] = run_case_ode(caseConfig)
     Tcell = zeros(n_pts, 1);
 
     V_main(1) = params.v_main_start;
-    V_fast(1) = 0;
+    V_fast(1) = params.v_main_start; % start aligned with main cap
     Tcell(1) = params.t_start;
 
     for k = 1:n_pts
-        V_internal = V_main(k) - V_fast(k);
+        i_r_delta = (V_main(k) - V_fast(k)) / params.R_delta;
+        Vt = V_fast(k); % node before ESR
         if strcmp(load_profile.type, 'power')
             P_req = load_profile.values(k);
-            [Iload(k), Vbus(k)] = solve_constant_power(P_req, V_internal, params.R_esr_fast, params.vmin);
+            [Iload(k), Vbus(k)] = solve_constant_power(P_req, Vt, params.R_esr_fast, params.vmin);
             Pcell(k) = Vbus(k) * Iload(k);
         else
             Iload(k) = load_profile.values(k);
-            Vbus(k) = V_internal - params.R_esr_fast * Iload(k);
+            Vbus(k) = Vt - params.R_esr_fast * Iload(k);
             Pcell(k) = Vbus(k) * Iload(k);
         end
 
@@ -36,15 +37,15 @@ function [Results, elapsed_time] = run_case_ode(caseConfig)
             Pcell(k) = 0;
         end
 
-        i_r_delta = V_fast(k) / params.R_delta;
         Ploss(k) = (Iload(k).^2) * params.R_esr_fast + params.R_delta * (i_r_delta.^2);
 
         if k < n_pts
             dt = time_grid(k+1) - time_grid(k);
-            dV_main = Iload(k) / params.C_main;
-            dV_fast = (Iload(k) - i_r_delta) / params.C_fast;
+            I_main = i_r_delta;              % current leaving main node to fast node
+            dV_main = -I_main / params.C_main;
+            dV_fast = (i_r_delta - Iload(k)) / params.C_fast; % KCL at fast node: C_fast dV/dt = i_delta - Iload
             V_main(k+1) = max(V_main(k) + dt * dV_main, 0);
-            V_fast(k+1) = V_fast(k) + dt * dV_fast;
+            V_fast(k+1) = max(V_fast(k) + dt * dV_fast, 0);
 
             cooling = 0;
             if params.Rth > 0 && isfinite(params.Rth)
@@ -115,10 +116,6 @@ function [time_grid, load_profile] = build_cell_profile(caseConfig, params)
             cell_signal = profile_values / denom;
             load_profile.type = 'power';
     end
-
-    % Convention: positive profile values mean charging current/power,
-    % while the solver expects positive load to discharge the cell.
-    cell_signal = -cell_signal;
 
     load_profile.values = interp1(profile_time, cell_signal, time_grid, 'linear', 'extrap');
 end

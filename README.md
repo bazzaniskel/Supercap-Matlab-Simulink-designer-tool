@@ -76,7 +76,7 @@ Interactive MATLAB/Simulink tool to design, simulate, and time‑march lifetime 
   my_profile_pp.power_data = [0 5e3 5e3 0];  % W if mode=power
   my_profile_pp.description = '2 s 5 kW block';
   ```
-- Scaling & sign conventions (apply to both backends): profile values are system‑level; the runner divides by parallels (and series × cells for power) to get per‑cell demand. Positive entries mean charging at the system level; the solver expects discharge as positive, so values are negated before simulation. Profiles are linearly interpolated to the chosen timestep.
+- Scaling & sign conventions (apply to both backends): profile values are system‑level; the runner divides by parallels (and series × cells for power) to get per‑cell demand. Positive entries mean the load is drawing current/power (discharge). The ODE solver internally flips the sign (passive convention) but reports back positive currents/powers, so plots in both backends share the same orientation. Profiles are linearly interpolated to the chosen timestep.
 
 ## Temperature profile definition
 - Options at the prompt:  
