@@ -8,7 +8,7 @@ function [Results, elapsed_time] = run_case_ode(caseConfig)
     n_pts = numel(time_grid);
 
     V_main = zeros(n_pts, 1);
-    V_fast = zeros(n_pts, 1); % terminal-side capacitor voltage (fast branch)
+    V_fast = zeros(n_pts, 1); % voltage across R_delta‖C_delta branch
     Vbus = zeros(n_pts, 1);
     Iload = zeros(n_pts, 1);
     Pcell = zeros(n_pts, 1);
@@ -16,21 +16,21 @@ function [Results, elapsed_time] = run_case_ode(caseConfig)
     Tcell = zeros(n_pts, 1);
 
     V_main(1) = params.v_main_start;
-    V_fast(1) = params.v_main_start; % start aligned with main cap
+    V_fast(1) = 0; % diffusion branch starts uncharged
     Tcell(1) = params.t_start;
 
     for k = 1:n_pts
-        i_r_delta = (V_main(k) - V_fast(k)) / params.R_delta;
-        Vt = V_fast(k); % node before ESR
+        i_r_delta = (V_fast(k)) / params.R_delta; % current through R_delta (same voltage as C_delta)
+        Voc = V_main(k) + V_fast(k); % open-circuit terminal voltage (no ESR drop)
+
         if strcmp(load_profile.type, 'power')
             P_req = load_profile.values(k);
-            [Iload(k), Vbus(k)] = solve_constant_power(P_req, Vt, params.R_esr_fast, params.vmin);
-            Pcell(k) = Vbus(k) * Iload(k);
+            [Iload(k), Vbus(k)] = solve_constant_power(P_req, Voc, params.R_esr_fast, params.vmin);
         else
             Iload(k) = load_profile.values(k);
-            Vbus(k) = Vt - params.R_esr_fast * Iload(k);
-            Pcell(k) = Vbus(k) * Iload(k);
+            Vbus(k) = Voc - params.R_esr_fast * Iload(k);
         end
+        Pcell(k) = Vbus(k) * Iload(k);
 
         if Vbus(k) < 0
             Vbus(k) = 0;
@@ -41,9 +41,8 @@ function [Results, elapsed_time] = run_case_ode(caseConfig)
 
         if k < n_pts
             dt = time_grid(k+1) - time_grid(k);
-            I_main = i_r_delta;              % current leaving main node to fast node
-            dV_main = -I_main / params.C_main;
-            dV_fast = (i_r_delta - Iload(k)) / params.C_fast; % KCL at fast node: C_fast dV/dt = i_delta - Iload
+            dV_main = -Iload(k) / params.C_main; % discharge reduces main voltage
+            dV_fast = (Iload(k) - i_r_delta) / params.C_fast; % branch current into C_fast (positive discharge increases V_fast drop)
             V_main(k+1) = max(V_main(k) + dt * dV_main, 0);
             V_fast(k+1) = max(V_fast(k) + dt * dV_fast, 0);
 
@@ -120,31 +119,33 @@ function [time_grid, load_profile] = build_cell_profile(caseConfig, params)
     load_profile.values = interp1(profile_time, cell_signal, time_grid, 'linear', 'extrap');
 end
 
-function [I, Vbus] = solve_constant_power(P_req, Vc, R_cell, vmin)
+function [I, Vbus] = solve_constant_power(P_req, Voc, R_esr, vmin)
+    % Solve P = I*(Voc - R_esr*I) for I (positive discharge).
     if abs(P_req) < 1e-9
         I = 0;
-        Vbus = Vc;
+        Vbus = Voc;
         return;
     end
 
-    if R_cell <= 1e-12
-        Vbus = max(Vc, vmin);
+    if R_esr <= 1e-12
+        Vbus = max(Voc, vmin);
         I = P_req / max(Vbus, vmin);
         return;
     end
 
-    disc = Vc.^2 - 4 * R_cell * P_req;
+    disc = Voc.^2 - 4 * R_esr * P_req;
     if disc >= 0
-        I = (Vc - sqrt(disc)) / (2 * R_cell);
-        Vbus = Vc - R_cell * I;
+        I = (Voc - sqrt(disc)) / (2 * R_esr);
     else
-        Vbus = max(min(Vc, vmin), 1e-6);
-        I = min(P_req / max(Vbus, vmin), (Vc - Vbus) / R_cell);
+        % If required power exceeds what voltage can support, clamp at vmin.
+        Vbus = max(min(Voc, vmin), 1e-6);
+        I = min(P_req / max(Vbus, vmin), (Voc - Vbus) / R_esr);
     end
+    Vbus = Voc - R_esr * I;
 
     if Vbus < vmin && P_req > 0
         Vbus = max(vmin, 1e-6);
-        I = min(P_req / Vbus, (Vc - Vbus) / R_cell);
+        I = min(P_req / Vbus, (Voc - Vbus) / R_esr);
         I = max(I, 0);
     end
 end
